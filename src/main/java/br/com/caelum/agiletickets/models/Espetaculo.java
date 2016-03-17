@@ -14,8 +14,11 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
+import org.joda.time.Weeks;
 
 @Entity
 public class Espetaculo {
@@ -99,16 +102,28 @@ public class Espetaculo {
      */
 	public List<Sessao> criaSessoes(LocalDate inicio, LocalDate fim, LocalTime horario, Periodicidade periodicidade) {
 		LocalDate dataSessaoAtual = inicio;
+		int diasDeIntervalo = 1;
+		
 		sessoes = new ArrayList<Sessao>();
-		while (dataSessaoAtual.isBefore(fim.plusDays(1))) {
+		
+		int numeroSessoes = 0;
+		if (periodicidade==Periodicidade.SEMANAL) { 
+			numeroSessoes = Weeks.weeksBetween(inicio, fim).getWeeks() + 1;
+			diasDeIntervalo = 7;
+		} else if (periodicidade==Periodicidade.DIARIA) { 
+			numeroSessoes = Days.daysBetween(inicio, fim).getDays() + 1;
+			diasDeIntervalo = 1;
+		}
+		for (int i = 1; i <= numeroSessoes; i++) {
+			LocalDate diaSessao = new LocalDate(dataSessaoAtual);
+			DateTime inicioSessao = diaSessao.toDateTime(horario);
+			
 			Sessao sessao = new Sessao();
+			sessao.setInicio(inicioSessao);
 			sessao.setEspetaculo(this);
 			sessoes.add(sessao);
-			if (periodicidade==Periodicidade.SEMANAL) { 
-				dataSessaoAtual = dataSessaoAtual.plusDays(7);
-			} else if (periodicidade==Periodicidade.DIARIA) { 
-				dataSessaoAtual = dataSessaoAtual.plusDays(1);
-			}
+			
+			dataSessaoAtual = dataSessaoAtual.plusDays(diasDeIntervalo);
 		}
 		return sessoes;
 	}
