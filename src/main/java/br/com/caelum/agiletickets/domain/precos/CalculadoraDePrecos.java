@@ -13,14 +13,14 @@ public class CalculadoraDePrecos {
 		case CINEMA:
 		case SHOW:
 			//quando estiver acabando os ingressos... 
-			if((sessao.getTotalIngressos() - sessao.getIngressosReservados()) / sessao.getTotalIngressos().doubleValue() <= 0.05) { 
+			if(estaNosUltimos(sessao, 0.05)) { 
 				preco = sessao.getPreco().add(sessao.getPreco().multiply(BigDecimal.valueOf(0.10)));
 			} else {
 				preco = sessao.getPreco();
 			}
 			break;
 		case BALLET:
-			if((sessao.getTotalIngressos() - sessao.getIngressosReservados()) / sessao.getTotalIngressos().doubleValue() <= 0.50) { 
+			if(estaNosUltimos(sessao, 0.50)) { 
 				preco = sessao.getPreco().add(sessao.getPreco().multiply(BigDecimal.valueOf(0.20)));
 			} else {
 				preco = sessao.getPreco();
@@ -30,9 +30,8 @@ public class CalculadoraDePrecos {
 				preco = preco.add(sessao.getPreco().multiply(BigDecimal.valueOf(0.10)));
 			}
 			break;
-
 		case ORQUESTRA:
-			if((sessao.getTotalIngressos() - sessao.getIngressosReservados()) / sessao.getTotalIngressos().doubleValue() <= 0.50) { 
+			if(estaNosUltimos(sessao, 0.50)) {
 				preco = sessao.getPreco().add(sessao.getPreco().multiply(BigDecimal.valueOf(0.20)));
 			} else {
 				preco = sessao.getPreco();
@@ -42,13 +41,17 @@ public class CalculadoraDePrecos {
 				preco = preco.add(sessao.getPreco().multiply(BigDecimal.valueOf(0.10)));
 			}
 			break;
-
 		default:
 			preco = sessao.getPreco();
 		}
 		
-
 		return preco.multiply(BigDecimal.valueOf(quantidade));
+	}
+
+	private static boolean estaNosUltimos(Sessao sessao, Double porcentagemDeMaisCaros) {
+		int ingressosDisponiveis = sessao.getTotalIngressos() - sessao.getIngressosReservados();
+		double porcentagemDeIngressosDisponiveis = ingressosDisponiveis / sessao.getTotalIngressos().doubleValue();
+		return porcentagemDeIngressosDisponiveis <= porcentagemDeMaisCaros;
 	}
 
 }
