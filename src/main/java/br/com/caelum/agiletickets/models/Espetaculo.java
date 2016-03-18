@@ -109,7 +109,7 @@ public class Espetaculo {
 		int numeroSessoes = 0;
 		if (periodicidade==Periodicidade.SEMANAL) { 
 			numeroSessoes = Weeks.weeksBetween(inicio, fim).getWeeks() + 1;
-			diasDeIntervalo = 7;
+			diasDeIntervalo = 6;
 		} else if (periodicidade==Periodicidade.DIARIA) { 
 			numeroSessoes = Days.daysBetween(inicio, fim).getDays() + 1;
 			diasDeIntervalo = 1;
