@@ -136,8 +136,30 @@ public class EspetaculoTest {
 		Sessao terceira = espetaculo.getSessoes().get(2);
 		DateTime dataTerceira = new DateTime(2011, 1, 23, 17, 0);
 		Assert.assertEquals(dataTerceira, terceira.getInicio());
+	}
+	
+	@Test
+	public void deveCadastrarAsSessoesDiaria() throws Exception {
+		Espetaculo espetaculo = new Espetaculo();
+		espetaculo.setTipo(TipoDeEspetaculo.TEATRO);
 		
+		LocalDate dataInicio = new LocalDate(2011, 1, 9);
+		LocalDate dataFinal = new LocalDate(2011, 1, 11);
+		LocalTime horario = new LocalTime(17, 0);
 		
+		espetaculo.criaSessoes(dataInicio, dataFinal, horario, Periodicidade.DIARIA);
+		
+		Sessao primeira = espetaculo.getSessoes().get(0);
+		DateTime dataPrimeira = new DateTime(2011, 1, 9, 17, 0);
+		Assert.assertEquals(dataPrimeira, primeira.getInicio());
+		
+		Sessao segunda = espetaculo.getSessoes().get(1);
+		DateTime dataSegunda = new DateTime(2011, 1, 10, 17, 0);
+		Assert.assertEquals(dataSegunda, segunda.getInicio());
+		
+		Sessao terceira = espetaculo.getSessoes().get(2);
+		DateTime dataTerceira = new DateTime(2011, 1, 11, 17, 0);
+		Assert.assertEquals(dataTerceira, terceira.getInicio());
 	}
 	
 }
